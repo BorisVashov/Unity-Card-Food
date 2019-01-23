@@ -52,18 +52,24 @@ public class Card : MonoBehaviour
 		foodImageGameObject.SetActive(true);
 	}
 
-	public void ResetCard()
+	public void ResetCard(bool isDisableCollider)
 	{
 		backSide.SetActive(true);
 		fronSide.SetActive(false);
 		foodImageGameObject.SetActive(false);
 
-		// if (cardCollider != null)
-		// {
+		if (isDisableCollider)
+		{
 			cardCollider.enabled = false;
-		// }
+		}
 
 		isTouched = false;
+	}
+
+	public void DisableColliderAndTouchedOn()
+	{
+		isTouched = true;
+		cardCollider.enabled = false;
 	}
 
 	public void MoveCardToPosition(Vector2 targetPosition, bool isDealing)

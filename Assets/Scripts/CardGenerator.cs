@@ -43,7 +43,7 @@ public class CardGenerator : MonoBehaviour
 
 		card.InstalReferences(foodImageGO, frontSideGO, backSideGO);
 
-		card.ResetCard();	
+		card.ResetCard(isDisableCollider: true);	
 	}
 
 }

@@ -56,10 +56,18 @@ public class CardDealer : MonoBehaviour
 
 	IEnumerator ResetChoosenCardsCoroutine(float timeBeforeResetChoosenCards)
 	{
+		Card tempFirst = cardFirst;
+		Card tempSecond = cardSecond;
+
+		cardFirst = null;
+		cardSecond = null;
+
 		yield return new WaitForSeconds(timeBeforeResetChoosenCards);
 
-		cardFirst.ResetCard();
-		cardSecond.ResetCard();
+		tempFirst.ResetCard(isDisableCollider: false);
+		tempSecond.ResetCard(isDisableCollider: false);
+
+		
 	}
 
 	IEnumerator DealCardsCoroutine(float timeBetweenDealCard)
@@ -103,14 +111,26 @@ public class CardDealer : MonoBehaviour
 		{
 			Debug.Log("Reset id: " + id);
 
-			FoodCards[id].ResetCard();
+			FoodCards[id].ResetCard(isDisableCollider: true);
 			
 			FoodCards[id].MoveCardToPosition(this.transform.position, isDealing);
 		}
 	}
 
-	void Update () 
+	public void PutChoosenCardToPlayerBase()
 	{
-		
+		Card tempFirst = cardFirst;
+		Card tempSecond = cardSecond;
+
+		cardFirst = null;
+		cardSecond = null;
+
+		tempFirst.MoveCardToPosition(PlayerBase.transform.position, false);
+		tempSecond.MoveCardToPosition(PlayerBase.transform.position, false);
+
+		tempFirst.DisableColliderAndTouchedOn();
+		tempSecond.DisableColliderAndTouchedOn();
+
 	}
+
 }

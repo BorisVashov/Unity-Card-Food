@@ -14,14 +14,11 @@ public class GameDirector : MonoBehaviour
 		{
 			if (cardDealer.cardFirst.CardId == cardDealer.cardSecond.CardId)
 			{
-				cardDealer.cardFirst.MoveCardToPosition(cardDealer.PlayerBase.transform.position, false);
-				cardDealer.cardSecond.MoveCardToPosition(cardDealer.PlayerBase.transform.position, false);
+				cardDealer.PutChoosenCardToPlayerBase();
+				
 			}
 			else
 			{
-				cardDealer.cardFirst = null;
-				cardDealer.cardSecond = null;
-
 				cardDealer.ResetChoosenCards();
 			}
 		}
