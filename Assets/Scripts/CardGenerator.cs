@@ -5,26 +5,6 @@ using UnityEngine.UI;
 
 public class CardGenerator : MonoBehaviour
 {
-	private GameObject cardPrefab;
-	private int foodCount = 30; // количество видов еды
-
-	public Card[] FoodCards;
-
-	void Awake()
-	{
-		cardPrefab = Resources.Load<GameObject>("CardPrefab");
-
-		Debug.Log("Try start generate");
-
-		if (cardPrefab != null)
-		{
-			Debug.Log("Start Generate");
-
-			FoodCards = GenerateCards(cardPrefab, foodCount);
-		}
-	
-	}
-
 	public Card[] GenerateCards(GameObject cardPrefab, int foodCount)
 	{
 		Card[] cardArray = new Card[foodCount * 2];

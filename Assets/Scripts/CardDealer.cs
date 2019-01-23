@@ -4,23 +4,42 @@ using UnityEngine;
 
 public class CardDealer : MonoBehaviour 
 {
-	public GameObject startPositionGO;
-	Card[] FoodCards;
+	public GameObject PlayerBase;
+	// public GameObject StartDealPositionGO;
+	public Vector2 StartDealPos;
 
-	Vector2 startDealPos;
+	Card[] FoodCards;
 
 	public Card cardFirst;
 	public Card cardSecond;
 
-	public GameObject PlayerBase;
+	private GameObject cardPrefab;
+	private int foodCount = 30; // количество видов еды
 
+	private CardGenerator cardGenerator;
 
+	void Awake()
+	{
+		cardPrefab = Resources.Load<GameObject>("CardPrefab");
+
+		cardGenerator = gameObject.GetComponent<CardGenerator>();
+
+		Debug.Log("Try start generate");
+
+		if (cardPrefab != null)
+		{
+			Debug.Log("Start Generate");
+
+			FoodCards = cardGenerator.GenerateCards(cardPrefab, foodCount);
+		}
+	
+	}
+	
 	void Start () 
 	{
-		FoodCards = GameObject.Find("DeckOfCards").GetComponent<CardGenerator>().FoodCards;
 		PlayerBase = this.transform.Find("PlayerBase").gameObject;
 
-		startDealPos = startPositionGO.transform.position;
+		StartDealPos = this.transform.Find("StartDealPos").transform.position;
 	}
 	
 	public void DealCards()
@@ -68,8 +87,8 @@ public class CardDealer : MonoBehaviour
 
 	private Vector2 GetTargetPosition(int id)
 	{
-		float x = startDealPos.x + id % 5 + id % 5 * 0.3f;
-		float y = startDealPos.y - id / 5 - id / 5 * 0.3f;
+		float x = StartDealPos.x + id % 5 + id % 5 * 0.3f;
+		float y = StartDealPos.y - id / 5 - id / 5 * 0.3f;
 
 		Vector2	targetPos = new Vector2(x, y);
 
