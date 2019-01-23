@@ -30,12 +30,18 @@ public class Card : MonoBehaviour
 		cardCollider = GetComponent<Collider2D>();
 	}
 
-	public void DidTouch()
+	public Card DidTouch()
 	{
 		if (!isTouched)
 		{
 			ShowCard();
 			isTouched = true;
+
+			return this;
+		}
+		else
+		{
+			return null;
 		}
 	}
 
@@ -104,7 +110,9 @@ public class Card : MonoBehaviour
 
 	public bool Equals(Card otherCard)
 	{
-		if (this.CardId == (otherCard as Card).CardId)
+		if (otherCard == null)
+			return false;
+		else if (this.CardId == (otherCard as Card).CardId)
 			return true;
 		else
 			return false;

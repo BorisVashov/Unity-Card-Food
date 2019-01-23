@@ -9,9 +9,17 @@ public class CardDealer : MonoBehaviour
 
 	Vector2 startDealPos;
 
+	public Card cardFirst;
+	public Card cardSecond;
+
+	public GameObject PlayerBase;
+
+
 	void Start () 
 	{
 		FoodCards = GameObject.Find("DeckOfCards").GetComponent<CardGenerator>().FoodCards;
+		PlayerBase = this.transform.Find("PlayerBase").gameObject;
+
 		startDealPos = startPositionGO.transform.position;
 	}
 	
@@ -20,6 +28,19 @@ public class CardDealer : MonoBehaviour
 			Debug.Log("Deal length: " + FoodCards.Length);
 
 			StartCoroutine(DealCardsCoroutine(GameRules.TimeBetweenDealCard));
+	}
+
+	public void ResetChoosenCards()
+	{
+		StartCoroutine(ResetChoosenCardsCoroutine(GameRules.TimeBeforeResetChoosenCards));
+	}
+
+	IEnumerator ResetChoosenCardsCoroutine(float timeBeforeResetChoosenCards)
+	{
+		yield return new WaitForSeconds(timeBeforeResetChoosenCards);
+
+		cardFirst.ResetCard();
+		cardSecond.ResetCard();
 	}
 
 	IEnumerator DealCardsCoroutine(float timeBetweenDealCard)

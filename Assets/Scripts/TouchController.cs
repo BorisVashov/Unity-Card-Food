@@ -9,9 +9,12 @@ public class TouchController : MonoBehaviour
 	Vector3 startVector;
 
 	Camera mainCamera;
+	CardDealer cardDealer;
+
 	void Start () 
 	{
 		mainCamera = Camera.main;
+		cardDealer = GameObject.Find("CardDealer").GetComponent<CardDealer>();
 	}
 	
 	void Update () 
@@ -35,7 +38,16 @@ public class TouchController : MonoBehaviour
 				{
 					Card card = hits[index].collider.gameObject.GetComponent<Card>();
 
-					card.DidTouch();
+					if (cardDealer.cardFirst == null)
+					{
+						cardDealer.cardFirst = card.DidTouch();
+					}
+					else if (cardDealer.cardSecond == null)
+					{
+						cardDealer.cardSecond = card.DidTouch();
+					}
+
+					break;
 				}
 				// {
 				// 	Debug.Log("NO");
@@ -61,7 +73,14 @@ public class TouchController : MonoBehaviour
 				{
 					Card card = hits[index].collider.gameObject.GetComponent<Card>();
 
-					card.DidTouch();
+					if (cardDealer.cardFirst == null)
+					{
+						cardDealer.cardFirst = card.DidTouch();
+					}
+					else if (cardDealer.cardSecond == null)
+					{
+						cardDealer.cardSecond = card.DidTouch();
+					}
 
 					break;
 				}
