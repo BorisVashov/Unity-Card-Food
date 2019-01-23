@@ -5,17 +5,29 @@ using UnityEngine;
 public class GameDirector : MonoBehaviour 
 {
 	CardDealer cardDealer;
+	ScoreDirector scoreDirector;
 
-	public static PlayerState Players;
+	private int CountOfDealedCards = 0;
+	private bool gameIsStarted = false; 
 
 	void Update()
 	{
+		if (CountOfDealedCards == 0 && gameIsStarted)
+		{
+			CountOfDealedCards = GameRules.CardForDealing;
+
+			cardDealer.DealCards();
+		}
+
 		if (cardDealer.cardFirst != null && cardDealer.cardSecond != null)
 		{
 			if (cardDealer.cardFirst.CardId == cardDealer.cardSecond.CardId)
 			{
+				scoreDirector.AddScore(1);
+
 				cardDealer.PutChoosenCardToPlayerBase();
-				
+
+				CountOfDealedCards -= 2;
 			}
 			else
 			{
@@ -27,12 +39,12 @@ public class GameDirector : MonoBehaviour
 	void Start()
 	{
 		cardDealer = GameObject.Find("CardDealer").GetComponent<CardDealer>();
+
+		scoreDirector = new ScoreDirector();
 	}
 	public void StartGame () 
 	{
-		Debug.Log("StartGame");
-		
-		cardDealer.DealCards();
+		gameIsStarted = true;
 	}
 	
 	public void RestartGame () 

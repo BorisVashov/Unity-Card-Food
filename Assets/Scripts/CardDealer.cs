@@ -15,6 +15,7 @@ public class CardDealer : MonoBehaviour
 
 	private GameObject cardPrefab;
 	private int foodCount = 30; // количество видов еды
+	private int roundOfDealing = 0;
 
 	private CardGenerator cardGenerator;
 
@@ -39,10 +40,26 @@ public class CardDealer : MonoBehaviour
 
 		touchController.gameObject.SetActive(false);
 	}
+
+	private void ShuffleCards()
+	{
+		for (int id = 0; id < GameRules.CardForDealing; id++)
+		{
+			int randIndex = 
+				Random.Range(roundOfDealing * GameRules.CardForDealing, roundOfDealing * GameRules.CardForDealing + GameRules.CardForDealing);
+			
+			Card tempCard = FoodCards[randIndex];
+
+			FoodCards[randIndex] = FoodCards[roundOfDealing * GameRules.CardForDealing + id];
+			FoodCards[roundOfDealing * GameRules.CardForDealing + id] = tempCard;
+		}
+	}
 	
 	public void DealCards()
 	{
 		Debug.Log("Deal length: " + FoodCards.Length);
+
+		ShuffleCards();
 
 		StartCoroutine(DealCardsCoroutine(GameRules.TimeBetweenDealCard));
 	}
@@ -51,19 +68,19 @@ public class CardDealer : MonoBehaviour
 	{
 		bool isDealing = true;
 
-		for(int id = 0; id < FoodCards.Length / 2; id++)
+		for(int id = 0; id < GameRules.CardForDealing; id++)
 		{
-			Debug.Log("Deal id: " + id);
+			Debug.Log("Deal id: " + (id + roundOfDealing * GameRules.CardForDealing));
 
 			Vector2 targetPosition = GetTargetPosition(id);
 
-			FoodCards[id].MoveCardToPosition(targetPosition, isDealing);
+			FoodCards[roundOfDealing * GameRules.CardForDealing + id].MoveCardToPosition(targetPosition, isDealing);
 
-			/*if ((id + 1) % 5 == 0 && id != 0) // ---->> механика раздачи карт
+			if ((id + 1) % 4 == 0 && id != 0) // ---->> механика раздачи карт
 			{
-				yield return new WaitForSeconds(timeBetweenDealCard * 3);
+				yield return new WaitForSeconds(timeBetweenDealCard * 2);
 			}
-			else*/
+			else
 			{
 				yield return new WaitForSeconds(timeBetweenDealCard);
 			}
@@ -71,19 +88,21 @@ public class CardDealer : MonoBehaviour
 
 		yield return new WaitForSeconds(1f);
 
-		for (int id = 0; id < FoodCards.Length / 2; id++)
+		for (int id = 0; id < GameRules.CardForDealing; id++)
 		{
-			FoodCards[id].ShowCard();
+			FoodCards[roundOfDealing * 20 + id].ShowCard();
 		}
 
 		yield return new WaitForSeconds(1f);
 
-		for (int id = 0; id < FoodCards.Length / 2; id++)
+		for (int id = 0; id < GameRules.CardForDealing; id++)
 		{
-			FoodCards[id].HideCard();
+			FoodCards[roundOfDealing * 20 + id].HideCard();
 		}
 
 		touchController.gameObject.SetActive(true);
+
+		roundOfDealing++;
 	}
 
 	public void ResetChoosenCards()
@@ -107,8 +126,8 @@ public class CardDealer : MonoBehaviour
 
 	private Vector2 GetTargetPosition(int id)
 	{
-		float x = StartDealPos.x + id % 5 + id % 5 * 0.3f;
-		float y = StartDealPos.y - id / 5 - id / 5 * 0.3f;
+		float x = StartDealPos.x + id % 4 + id % 4 * 0.5f;
+		float y = StartDealPos.y - id / 4 - id / 4 * 0.5f;
 
 		Vector2	targetPos = new Vector2(x, y);
 
@@ -119,7 +138,7 @@ public class CardDealer : MonoBehaviour
 	{
 		bool isDealing = false;
 
-		for(int id = 0; id < FoodCards.Length / 2; id++)
+		for(int id = 0; id < GameRules.CardForDealing; id++)
 		{
 			Debug.Log("Reset id: " + id);
 

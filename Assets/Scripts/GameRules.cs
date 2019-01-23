@@ -10,5 +10,7 @@ public static class GameRules
 
 	public static readonly float TimeBeforeResetChoosenCards = 0.3f;
 
+	public static readonly int CardForDealing = 20;
+
 
 }
