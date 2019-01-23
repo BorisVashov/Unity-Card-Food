@@ -28,15 +28,7 @@ public class CardDealer : MonoBehaviour
 
 		touchController = GameObject.Find("TouchController").GetComponent<TouchController>();
 
-		Debug.Log("Try start generate");
-
-		if (cardPrefab != null)
-		{
-			Debug.Log("Start Generate");
-
-			FoodCards = cardGenerator.GenerateCards(cardPrefab, foodCount);
-		}
-	
+		FoodCards = cardGenerator.GenerateCards(cardPrefab, foodCount);
 	}
 	
 	void Start () 
@@ -50,30 +42,9 @@ public class CardDealer : MonoBehaviour
 	
 	public void DealCards()
 	{
-			Debug.Log("Deal length: " + FoodCards.Length);
+		Debug.Log("Deal length: " + FoodCards.Length);
 
-			StartCoroutine(DealCardsCoroutine(GameRules.TimeBetweenDealCard));
-	}
-
-	public void ResetChoosenCards()
-	{
-		StartCoroutine(ResetChoosenCardsCoroutine(GameRules.TimeBeforeResetChoosenCards));
-	}
-
-	IEnumerator ResetChoosenCardsCoroutine(float timeBeforeResetChoosenCards)
-	{
-		Card tempFirst = cardFirst;
-		Card tempSecond = cardSecond;
-
-		cardFirst = null;
-		cardSecond = null;
-
-		yield return new WaitForSeconds(timeBeforeResetChoosenCards);
-
-		tempFirst.ResetCard(isDisableCollider: false);
-		tempSecond.ResetCard(isDisableCollider: false);
-
-		
+		StartCoroutine(DealCardsCoroutine(GameRules.TimeBetweenDealCard));
 	}
 
 	IEnumerator DealCardsCoroutine(float timeBetweenDealCard)
@@ -113,6 +84,25 @@ public class CardDealer : MonoBehaviour
 		}
 
 		touchController.gameObject.SetActive(true);
+	}
+
+	public void ResetChoosenCards()
+	{
+		StartCoroutine(ResetChoosenCardsCoroutine(GameRules.TimeBeforeResetChoosenCards));
+	}
+
+	IEnumerator ResetChoosenCardsCoroutine(float timeBeforeResetChoosenCards)
+	{
+		Card tempFirst = cardFirst;
+		Card tempSecond = cardSecond;
+
+		cardFirst = null;
+		cardSecond = null;
+
+		yield return new WaitForSeconds(timeBeforeResetChoosenCards);
+
+		tempFirst.ResetCard(isDisableCollider: false);
+		tempSecond.ResetCard(isDisableCollider: false);
 	}
 
 	private Vector2 GetTargetPosition(int id)
