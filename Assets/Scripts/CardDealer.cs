@@ -18,11 +18,15 @@ public class CardDealer : MonoBehaviour
 
 	private CardGenerator cardGenerator;
 
+	private TouchController touchController;
+
 	void Awake()
 	{
 		cardPrefab = Resources.Load<GameObject>("CardPrefab");
 
 		cardGenerator = gameObject.GetComponent<CardGenerator>();
+
+		touchController = GameObject.Find("TouchController").GetComponent<TouchController>();
 
 		Debug.Log("Try start generate");
 
@@ -40,6 +44,8 @@ public class CardDealer : MonoBehaviour
 		PlayerBase = this.transform.Find("PlayerBase").gameObject;
 
 		StartDealPos = this.transform.Find("StartDealPos").transform.position;
+
+		touchController.gameObject.SetActive(false);
 	}
 	
 	public void DealCards()
@@ -91,6 +97,22 @@ public class CardDealer : MonoBehaviour
 				yield return new WaitForSeconds(timeBetweenDealCard);
 			}
 		}
+
+		yield return new WaitForSeconds(1f);
+
+		for (int id = 0; id < FoodCards.Length / 2; id++)
+		{
+			FoodCards[id].ShowCard();
+		}
+
+		yield return new WaitForSeconds(1f);
+
+		for (int id = 0; id < FoodCards.Length / 2; id++)
+		{
+			FoodCards[id].HideCard();
+		}
+
+		touchController.gameObject.SetActive(true);
 	}
 
 	private Vector2 GetTargetPosition(int id)

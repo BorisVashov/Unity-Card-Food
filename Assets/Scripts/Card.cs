@@ -45,18 +45,23 @@ public class Card : MonoBehaviour
 		}
 	}
 
-	private void ShowCard()
+	public void ShowCard()
 	{
 		backSide.SetActive(false);
 		fronSide.SetActive(true);
 		foodImageGameObject.SetActive(true);
 	}
 
-	public void ResetCard(bool isDisableCollider)
+	public void HideCard()
 	{
 		backSide.SetActive(true);
 		fronSide.SetActive(false);
 		foodImageGameObject.SetActive(false);
+	}
+
+	public void ResetCard(bool isDisableCollider)
+	{
+		HideCard();
 
 		if (isDisableCollider)
 		{
@@ -112,16 +117,6 @@ public class Card : MonoBehaviour
 			
 			yield return null;
 		}
-	}
-
-	public bool Equals(Card otherCard)
-	{
-		if (otherCard == null)
-			return false;
-		else if (this.CardId == (otherCard as Card).CardId)
-			return true;
-		else
-			return false;
 	}
 
 }
