@@ -23,6 +23,9 @@ public class CardGenerator : MonoBehaviour
 			cardArray[index + 1] = Instantiate(cardPrefab, this.transform).GetComponent<Card>();
 			
 			SetupCard(cardArray[index + 1], id, imageFood);
+
+			cardArray[index].gameObject.SetActive(false);
+			cardArray[index + 1].gameObject.SetActive(false);
 		}
 
 		return cardArray;
@@ -43,7 +46,7 @@ public class CardGenerator : MonoBehaviour
 
 		card.InstalReferences(foodImageGO, frontSideGO, backSideGO);
 
-		card.ResetCard(isDisableCollider: true);	
+		card.ResetCard();	
 	}
 
 }

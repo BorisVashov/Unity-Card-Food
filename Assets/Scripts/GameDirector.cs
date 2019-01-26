@@ -10,8 +10,24 @@ public class GameDirector : MonoBehaviour
 	private int CountOfDealedCards = 0;
 	private bool gameIsStarted = false; 
 
+	private int lives;
+
+	public GameObject mainMenuUI;
+
+	void Start()
+	{
+		cardDealer = GameObject.Find("CardDealer").GetComponent<CardDealer>();
+
+		scoreDirector = new ScoreDirector();
+	}
+
 	void Update()
 	{
+		if (lives == 0 && gameIsStarted)
+		{
+			StopGame();
+		}
+
 		if (CountOfDealedCards == 0 && gameIsStarted)
 		{
 			CountOfDealedCards = GameRules.CardForDealing;
@@ -25,31 +41,51 @@ public class GameDirector : MonoBehaviour
 			{
 				scoreDirector.AddScore(1);
 
-				cardDealer.PutChoosenCardToPlayerBase();
+				cardDealer.PutChoosenCardsBackToDeck();
 
 				CountOfDealedCards -= 2;
 			}
 			else
 			{
-				cardDealer.ResetChoosenCards();
+				lives--;
+				Debug.Log("Oops! Lives = " + lives);
+
+				cardDealer.HideChoosenCards();
 			}
 		}
 	}
 
-	void Start()
-	{
-		cardDealer = GameObject.Find("CardDealer").GetComponent<CardDealer>();
-
-		scoreDirector = new ScoreDirector();
-	}
 	public void StartGame () 
 	{
+		mainMenuUI.SetActive(false);
+
+		lives = GameRules.LivesForGame;
+
+		Debug.Log("Lives = " + lives);
+
 		gameIsStarted = true;
 	}
 	
 	public void RestartGame () 
 	{
 		cardDealer.ResetCards();
+	}
+
+	public void StopGame()
+	{
+
+		gameIsStarted = false;
+
+		// cardDealer.cardFirst = null;
+		// cardDealer.cardSecond = null;
+
+		cardDealer.GetBackAllCardsToDeck();
+
+		mainMenuUI.SetActive(true);
+
+		CountOfDealedCards = 0;
+
+
 	}
 
 

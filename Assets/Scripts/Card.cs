@@ -27,6 +27,8 @@ public class Card : MonoBehaviour
 		fronSide = _frontSide;
 		backSide = _backSide;
 
+		startPosition = this.gameObject.transform.position;
+
 		cardCollider = GetComponent<Collider2D>();
 	}
 
@@ -57,24 +59,24 @@ public class Card : MonoBehaviour
 		backSide.SetActive(true);
 		fronSide.SetActive(false);
 		foodImageGameObject.SetActive(false);
-	}
-
-	public void ResetCard(bool isDisableCollider)
-	{
-		HideCard();
-
-		if (isDisableCollider)
-		{
-			cardCollider.enabled = false;
-		}
 
 		isTouched = false;
 	}
 
-	public void DisableColliderAndTouchedOn()
+	public void ResetCard()
 	{
-		isTouched = true;
+		HideCard();
+
 		cardCollider.enabled = false;
+	}
+
+	public void GetBackCardToDeck()
+	{
+		ResetCard();
+
+		this.gameObject.transform.position = startPosition;
+
+		this.gameObject.SetActive(false);
 	}
 
 	public void MoveCardToPosition(Vector2 targetPosition, bool isDealing)
@@ -82,7 +84,7 @@ public class Card : MonoBehaviour
 		Vector2 direction = targetPosition - (Vector2)this.transform.position;
 		direction.Normalize();
 
-		startPosition = this.transform.position;
+		// startPosition = this.transform.position;
 
 		float timeStartedLerping = Time.time;
 
@@ -117,6 +119,19 @@ public class Card : MonoBehaviour
 			
 			yield return null;
 		}
+	}
+
+	public void AddCardToScore()
+	{
+		StartCoroutine(AddCardToScoreCoroutine());
+	}
+
+	IEnumerator AddCardToScoreCoroutine()
+	{
+		yield return new WaitForSeconds(GameRules.TimeBeforeResetChoosenCards);
+
+		this.ResetCard();
+		this.gameObject.transform.position = startPosition;
 	}
 
 }

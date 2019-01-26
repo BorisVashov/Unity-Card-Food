@@ -84,9 +84,6 @@ public class TouchController : MonoBehaviour
 
 					break;
 				}
-				// {
-				// 	Debug.Log("NO");
-				// }
 			}
 		}
 

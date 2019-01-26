@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CardDealer : MonoBehaviour 
 {
-	public GameObject PlayerBase;
-	// public GameObject StartDealPositionGO;
 	public Vector2 StartDealPos;
 
 	Card[] FoodCards;
@@ -23,7 +21,7 @@ public class CardDealer : MonoBehaviour
 
 	void Awake()
 	{
-		cardPrefab = Resources.Load<GameObject>("CardPrefab");
+		cardPrefab = Resources.Load<GameObject>("CardPrefab2");
 
 		cardGenerator = gameObject.GetComponent<CardGenerator>();
 
@@ -34,11 +32,7 @@ public class CardDealer : MonoBehaviour
 	
 	void Start () 
 	{
-		PlayerBase = this.transform.Find("PlayerBase").gameObject;
-
 		StartDealPos = this.transform.Find("StartDealPos").transform.position;
-
-		touchController.gameObject.SetActive(false);
 	}
 
 	private void ShuffleCards()
@@ -54,12 +48,24 @@ public class CardDealer : MonoBehaviour
 			FoodCards[roundOfDealing * GameRules.CardForDealing + id] = tempCard;
 		}
 	}
+
+	public void ActivateAllCardsObjects()
+	{
+		for (int id = 0; id < FoodCards.Length; id++)
+		{
+			FoodCards[id].gameObject.SetActive(true);
+		}
+	}
 	
 	public void DealCards()
 	{
+		touchController.gameObject.SetActive(false);
+
 		Debug.Log("Deal length: " + FoodCards.Length);
 
 		ShuffleCards();
+
+		ActivateAllCardsObjects();
 
 		StartCoroutine(DealCardsCoroutine(GameRules.TimeBetweenDealCard));
 	}
@@ -86,14 +92,14 @@ public class CardDealer : MonoBehaviour
 			}
 		}
 
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(timeBetweenDealCard * 5);
 
 		for (int id = 0; id < GameRules.CardForDealing; id++)
 		{
 			FoodCards[roundOfDealing * 20 + id].ShowCard();
 		}
 
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(GameRules.TimeToShowCardsAtStartRound);
 
 		for (int id = 0; id < GameRules.CardForDealing; id++)
 		{
@@ -105,12 +111,12 @@ public class CardDealer : MonoBehaviour
 		roundOfDealing++;
 	}
 
-	public void ResetChoosenCards()
+	public void HideChoosenCards()
 	{
-		StartCoroutine(ResetChoosenCardsCoroutine(GameRules.TimeBeforeResetChoosenCards));
+		StartCoroutine(HideChoosenCardsCoroutine(GameRules.TimeBeforeResetChoosenCards));
 	}
 
-	IEnumerator ResetChoosenCardsCoroutine(float timeBeforeResetChoosenCards)
+	IEnumerator HideChoosenCardsCoroutine(float timeBeforeHideChoosenCards)
 	{
 		Card tempFirst = cardFirst;
 		Card tempSecond = cardSecond;
@@ -118,16 +124,16 @@ public class CardDealer : MonoBehaviour
 		cardFirst = null;
 		cardSecond = null;
 
-		yield return new WaitForSeconds(timeBeforeResetChoosenCards);
+		yield return new WaitForSeconds(timeBeforeHideChoosenCards);
 
-		tempFirst.ResetCard(isDisableCollider: false);
-		tempSecond.ResetCard(isDisableCollider: false);
+		tempFirst.HideCard();
+		tempSecond.HideCard();
 	}
 
 	private Vector2 GetTargetPosition(int id)
 	{
 		float x = StartDealPos.x + id % 4 + id % 4 * 0.5f;
-		float y = StartDealPos.y - id / 4 - id / 4 * 0.5f;
+		float y = StartDealPos.y - id / 4 - id / 4 * 0.6f;
 
 		Vector2	targetPos = new Vector2(x, y);
 
@@ -142,13 +148,15 @@ public class CardDealer : MonoBehaviour
 		{
 			Debug.Log("Reset id: " + id);
 
-			FoodCards[id].ResetCard(isDisableCollider: true);
+			FoodCards[id + GameRules.CardForDealing * roundOfDealing].ResetCard();
 			
-			FoodCards[id].MoveCardToPosition(this.transform.position, isDealing);
+			FoodCards[id + GameRules.CardForDealing * roundOfDealing].MoveCardToPosition(this.transform.position, isDealing);
 		}
+
+		roundOfDealing--;
 	}
 
-	public void PutChoosenCardToPlayerBase()
+	public void PutChoosenCardsBackToDeck()
 	{
 		Card tempFirst = cardFirst;
 		Card tempSecond = cardSecond;
@@ -156,12 +164,18 @@ public class CardDealer : MonoBehaviour
 		cardFirst = null;
 		cardSecond = null;
 
-		tempFirst.MoveCardToPosition(PlayerBase.transform.position, false);
-		tempSecond.MoveCardToPosition(PlayerBase.transform.position, false);
+		tempFirst.AddCardToScore();
+		tempSecond.AddCardToScore();
+	}
 
-		tempFirst.DisableColliderAndTouchedOn();
-		tempSecond.DisableColliderAndTouchedOn();
+	public void GetBackAllCardsToDeck()
+	{
+		for(int id = 0; id < FoodCards.Length; id++)
+		{
+			FoodCards[id].GetBackCardToDeck();
+		}
 
+		roundOfDealing = 0;
 	}
 
 }
