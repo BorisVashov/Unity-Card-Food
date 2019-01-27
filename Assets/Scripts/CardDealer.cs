@@ -21,7 +21,7 @@ public class CardDealer : MonoBehaviour
 
 	void Awake()
 	{
-		cardPrefab = Resources.Load<GameObject>("CardPrefab2");
+		cardPrefab = Resources.Load<GameObject>("CardPrefab3");
 
 		cardGenerator = gameObject.GetComponent<CardGenerator>();
 

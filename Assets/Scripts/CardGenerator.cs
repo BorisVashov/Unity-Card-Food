@@ -42,6 +42,8 @@ public class CardGenerator : MonoBehaviour
 
 		foodImageGO.name = "FoodImage";
 
+		foodImageGO.GetComponent<SpriteRenderer>().sortingLayerName = "FoodCardLayout";
+		
 		card.CardId = id;
 
 		card.InstalReferences(foodImageGO, frontSideGO, backSideGO);
