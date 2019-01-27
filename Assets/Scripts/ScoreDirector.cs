@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class ScoreDirector
 {
-	private int score = 0;
+	private int currentGameScore = 0;
 
 	public void AddScore(int x)
 	{
-		score += x;
+		currentGameScore += x;
+	}
+
+	public int GetCurrentGameScore()
+	{
+		return currentGameScore;
+	}
+
+	public void ResetCurrentGameScore()
+	{
+		currentGameScore = 0;
 	}
 	
 }

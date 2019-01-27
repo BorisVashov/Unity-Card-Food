@@ -19,9 +19,11 @@ public class CardDealer : MonoBehaviour
 
 	private TouchController touchController;
 
+	
+
 	void Awake()
 	{
-		cardPrefab = Resources.Load<GameObject>("CardPrefab3");
+		cardPrefab = Resources.Load<GameObject>("CardPrefab4");
 
 		cardGenerator = gameObject.GetComponent<CardGenerator>();
 
@@ -62,6 +64,11 @@ public class CardDealer : MonoBehaviour
 		touchController.gameObject.SetActive(false);
 
 		Debug.Log("Deal length: " + FoodCards.Length);
+
+		if (roundOfDealing == 3)
+		{
+			roundOfDealing = 0;
+		}
 
 		ShuffleCards();
 

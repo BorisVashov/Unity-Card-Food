@@ -8,9 +8,12 @@ public class Card : MonoBehaviour
 
 	public int CardId;
 
-	public GameObject backSide;
-	public GameObject fronSide;
-	public GameObject foodImageGameObject;
+	public GameObject foodSpriteGameObject;
+
+	public SpriteRenderer spriteRenderer;
+
+	public Sprite frontSide;
+	public Sprite backSide;
 
 	Vector2 startPosition;
 
@@ -21,15 +24,19 @@ public class Card : MonoBehaviour
 		
 	}
 
-	public void InstalReferences(GameObject _foodImage, GameObject _frontSide, GameObject _backSide)
+	public void InstalReferences(GameObject _foodImage, Sprite _frontSide, Sprite _backSide)
 	{
-		foodImageGameObject = _foodImage;
-		fronSide = _frontSide;
+		foodSpriteGameObject = _foodImage;
+
+		frontSide = _frontSide;
 		backSide = _backSide;
 
 		startPosition = this.gameObject.transform.position;
 
 		cardCollider = GetComponent<Collider2D>();
+
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		spriteRenderer.sprite = backSide;
 	}
 
 	public Card DidTouch()
@@ -49,16 +56,16 @@ public class Card : MonoBehaviour
 
 	public void ShowCard()
 	{
-		backSide.SetActive(false);
-		fronSide.SetActive(true);
-		foodImageGameObject.SetActive(true);
+		spriteRenderer.sprite = frontSide;
+
+		foodSpriteGameObject.SetActive(true);
 	}
 
 	public void HideCard()
 	{
-		backSide.SetActive(true);
-		fronSide.SetActive(false);
-		foodImageGameObject.SetActive(false);
+		spriteRenderer.sprite = backSide;
+
+		foodSpriteGameObject.SetActive(false);
 
 		isTouched = false;
 	}
