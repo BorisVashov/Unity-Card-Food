@@ -48,6 +48,16 @@ public class CardDealer : MonoBehaviour
 
 			FoodCards[randIndex] = FoodCards[roundOfDealing * GameRules.CardForDealing + id];
 			FoodCards[roundOfDealing * GameRules.CardForDealing + id] = tempCard;
+
+			
+		}
+	}
+
+	private void SetOrderInLayerForCards()
+	{
+		for (int id = 0; id < GameRules.CardForDealing; id++)
+		{
+			FoodCards[roundOfDealing * GameRules.CardForDealing + id].spriteRenderer.sortingOrder = id;
 		}
 	}
 
@@ -61,7 +71,7 @@ public class CardDealer : MonoBehaviour
 	
 	public void DealCards()
 	{
-		touchController.gameObject.SetActive(false);
+		touchController.enabled = false;
 
 		Debug.Log("Deal length: " + FoodCards.Length);
 
@@ -71,6 +81,10 @@ public class CardDealer : MonoBehaviour
 		}
 
 		ShuffleCards();
+		ShuffleCards();
+
+
+		SetOrderInLayerForCards();
 
 		ActivateAllCardsObjects();
 
@@ -113,7 +127,7 @@ public class CardDealer : MonoBehaviour
 			FoodCards[roundOfDealing * 20 + id].HideCard();
 		}
 
-		touchController.gameObject.SetActive(true);
+		touchController.enabled = true;
 
 		roundOfDealing++;
 	}
@@ -182,7 +196,18 @@ public class CardDealer : MonoBehaviour
 			FoodCards[id].GetBackCardToDeck();
 		}
 
+		cardFirst = null;
+		cardSecond = null;
+
 		roundOfDealing = 0;
+	}
+
+	public void StopAllCoroutinesInCards()
+	{
+		for(int i = 0; i < FoodCards.Length; i++)
+		{
+			FoodCards[i].StopAllCoroutines();
+		}
 	}
 
 }

@@ -13,12 +13,18 @@ public class GameDirector : MonoBehaviour
 	private int lives;
 
 	public GameObject mainMenuUI;
+	public GameObject gameUI;
+	public GameObject gamePauseUI;
+	
+	public TouchController touchController;
 
 	void Start()
 	{
+		touchController = GameObject.Find("TouchController").GetComponent<TouchController>();
+
 		cardDealer = GameObject.Find("CardDealer").GetComponent<CardDealer>();
 
-		scoreDirector = new ScoreDirector();
+		scoreDirector = GameObject.Find("ScoreDirector").GetComponent<ScoreDirector>();
 	}
 
 	void Update()
@@ -58,6 +64,7 @@ public class GameDirector : MonoBehaviour
 	public void StartGame () 
 	{
 		mainMenuUI.SetActive(false);
+		gameUI.SetActive(true);
 
 		lives = GameRules.LivesForGame;
 
@@ -68,24 +75,57 @@ public class GameDirector : MonoBehaviour
 	
 	public void RestartGame () 
 	{
-		cardDealer.ResetCards();
+		cardDealer.StopAllCoroutines();
+
+		scoreDirector.ResetCurrentGameScore();
+
+		Time.timeScale = 1f;
+
+		cardDealer.GetBackAllCardsToDeck();
+
+		CountOfDealedCards = 0;
+
+		gamePauseUI.SetActive(false);
+		gameUI.SetActive(true);
 	}
 
 	public void StopGame()
 	{
+		cardDealer.StopAllCoroutines();
+
+		scoreDirector.ResetCurrentGameScore();
+
+		Time.timeScale = 1f;
 
 		gameIsStarted = false;
-
-		// cardDealer.cardFirst = null;
-		// cardDealer.cardSecond = null;
 
 		cardDealer.GetBackAllCardsToDeck();
 
 		mainMenuUI.SetActive(true);
+		gameUI.SetActive(false);
+		gamePauseUI.SetActive(false);
 
 		CountOfDealedCards = 0;
+	}
 
+	public void PauseGame()
+	{
+		touchController.enabled = false;
 
+		Time.timeScale = 0f;
+		
+		gamePauseUI.SetActive(true);
+		gameUI.SetActive(false);
+	}
+
+	public void ContinueGame()
+	{
+		touchController.enabled = true;
+
+		Time.timeScale = 1f;
+
+		gamePauseUI.SetActive(false);
+		gameUI.SetActive(true);
 	}
 
 
