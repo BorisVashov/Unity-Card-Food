@@ -14,5 +14,5 @@ public static class GameRules
 
 	public static readonly int CardForDealing = 20;
 
-	public static readonly int LivesForGame = 30;
+	public static readonly int MaxLivesForGame = 5;
 }

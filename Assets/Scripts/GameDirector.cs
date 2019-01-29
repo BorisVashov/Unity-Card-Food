@@ -18,8 +18,31 @@ public class GameDirector : MonoBehaviour
 	
 	public TouchController touchController;
 
+	private GameObject healthStars;
+	public SpriteRenderer[] starRenderers;
+
+	private Sprite starOnSprite;
+	private Sprite starOffSprite;
+
+
+	private int bonusAnswers = 0;
+
 	void Start()
 	{
+		starRenderers = new SpriteRenderer[GameRules.MaxLivesForGame];
+
+		starOnSprite = Resources.Load<Sprite>("StarSprites/star_on");
+		starOffSprite = Resources.Load<Sprite>("StarSprites/star_off");
+
+		healthStars = GameObject.Find("HealthStars");
+
+		for (int i = 0; i < GameRules.MaxLivesForGame; i++)
+		{
+			starRenderers[i] = GameObject.Find("Star" + i).GetComponent<SpriteRenderer>();
+		}
+
+		healthStars.SetActive(false);
+
 		touchController = GameObject.Find("TouchController").GetComponent<TouchController>();
 
 		cardDealer = GameObject.Find("CardDealer").GetComponent<CardDealer>();
@@ -45,6 +68,12 @@ public class GameDirector : MonoBehaviour
 		{
 			if (cardDealer.cardFirst.CardId == cardDealer.cardSecond.CardId)
 			{
+				bonusAnswers++;
+				if (bonusAnswers == 2)
+				{
+					AddBonuseLive();
+				}
+
 				scoreDirector.AddScore(1);
 
 				cardDealer.PutChoosenCardsBackToDeck();
@@ -53,7 +82,11 @@ public class GameDirector : MonoBehaviour
 			}
 			else
 			{
+				bonusAnswers = 0; // сброс бонусной серии
+
 				lives--;
+				DeleteStar();
+
 				Debug.Log("Oops! Lives = " + lives);
 
 				cardDealer.HideChoosenCards();
@@ -66,11 +99,13 @@ public class GameDirector : MonoBehaviour
 		mainMenuUI.SetActive(false);
 		gameUI.SetActive(true);
 
-		lives = GameRules.LivesForGame;
+		lives = GameRules.MaxLivesForGame;
 
 		Debug.Log("Lives = " + lives);
 
 		gameIsStarted = true;
+
+		healthStars.SetActive(true);
 	}
 	
 	public void RestartGame () 
@@ -87,6 +122,8 @@ public class GameDirector : MonoBehaviour
 
 		gamePauseUI.SetActive(false);
 		gameUI.SetActive(true);
+
+		AddAllStars();
 	}
 
 	public void StopGame()
@@ -106,6 +143,9 @@ public class GameDirector : MonoBehaviour
 		gamePauseUI.SetActive(false);
 
 		CountOfDealedCards = 0;
+
+		AddAllStars();
+		healthStars.SetActive(false);
 	}
 
 	public void PauseGame()
@@ -126,6 +166,36 @@ public class GameDirector : MonoBehaviour
 
 		gamePauseUI.SetActive(false);
 		gameUI.SetActive(true);
+	}
+
+	private void AddBonuseLive()
+	{
+		if (lives < GameRules.MaxLivesForGame)
+		{
+			AddStar();
+			lives++;
+		}
+
+
+		bonusAnswers = 0;
+	}
+
+	private void AddStar()
+	{
+		starRenderers[lives].sprite = starOnSprite;
+	}
+
+	private void DeleteStar()
+	{
+		starRenderers[lives].sprite = starOffSprite;
+	}
+
+	private void AddAllStars()
+	{
+		for (int i = 0; i < starRenderers.Length; i++)
+		{
+			starRenderers[i].sprite = starOnSprite;
+		}
 	}
 
 
