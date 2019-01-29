@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class LanguageDirector : MonoBehaviour 
 {
@@ -13,9 +14,13 @@ public class LanguageDirector : MonoBehaviour
 	public TextMeshProUGUI playButtonText;
 	public TextMeshProUGUI scoreLabelText;
 
+	public Image langButtonImage;
+
 	public string currentLanguage;
 	Dictionary<string, string> currentDict;
 
+	private Sprite engLangSprite;
+	private Sprite ruLangSprite;
 
 	void Awake () 
 	{
@@ -42,6 +47,11 @@ public class LanguageDirector : MonoBehaviour
 	{
 		currentLanguage = PlayerPrefs.GetString("language", "eng");
 
+		engLangSprite = Resources.Load<Sprite>("UISprites/btn_eng");
+		ruLangSprite = Resources.Load<Sprite>("UISprites/btn_ru");
+
+		SetSpriteToLanguageButton();
+
 		InitializeText();
 	}
 
@@ -57,6 +67,21 @@ public class LanguageDirector : MonoBehaviour
 		currentDict.TryGetValue("best score", out tempString);
 		scoreLabelText.text = tempString;
 	}
+
+	private void SetSpriteToLanguageButton()
+	{
+		switch (currentLanguage)
+		{
+			case "eng":
+				langButtonImage.sprite = engLangSprite;
+				break;
+			
+			case "ru":
+				langButtonImage.sprite = ruLangSprite;
+				break;
+			
+		}
+	}
 	
 	public void ChangeTextLanguage() 
 	{
@@ -70,6 +95,8 @@ public class LanguageDirector : MonoBehaviour
 				currentLanguage = "eng";
 				break;
 		}
+
+		SetSpriteToLanguageButton();
 
 		InitializeText();
 

@@ -19,6 +19,8 @@ public class Card : MonoBehaviour
 
 	Collider2D cardCollider;
 
+	public AudioSource source;
+
 	void Start() 
 	{
 		
@@ -37,6 +39,8 @@ public class Card : MonoBehaviour
 
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		spriteRenderer.sprite = backSide;
+
+		source = gameObject.GetComponent<AudioSource>();
 	}
 
 	public Card DidTouch()
@@ -88,6 +92,8 @@ public class Card : MonoBehaviour
 
 	public void MoveCardToPosition(Vector2 targetPosition, bool isDealing)
 	{	
+		source.Play(); // play audio clip
+
 		Vector2 direction = targetPosition - (Vector2)this.transform.position;
 		direction.Normalize();
 

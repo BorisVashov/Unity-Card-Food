@@ -19,7 +19,7 @@ public class CardDealer : MonoBehaviour
 
 	private TouchController touchController;
 
-	
+	// private AudioDirector audioDirector;
 
 	void Awake()
 	{
@@ -35,6 +35,8 @@ public class CardDealer : MonoBehaviour
 	void Start () 
 	{
 		StartDealPos = this.transform.Find("StartDealPos").transform.position;
+
+		// audioDirector = GameObject.Find("AudioDirector").GetComponent<AudioDirector>();
 	}
 
 	private void ShuffleCards()
