@@ -155,7 +155,7 @@ public class CardDealer : MonoBehaviour
 
 	private Vector2 GetTargetPosition(int id)
 	{
-		float x = StartDealPos.x + id % 4 + id % 4 * 0.5f;
+		float x = StartDealPos.x + id % 4 + id % 4 * 0.4f;
 		float y = StartDealPos.y - id / 4 - id / 4 * 0.6f;
 
 		Vector2	targetPos = new Vector2(x, y);

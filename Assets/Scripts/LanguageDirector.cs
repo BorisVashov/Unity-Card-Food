@@ -13,6 +13,11 @@ public class LanguageDirector : MonoBehaviour
 
 	public TextMeshProUGUI playButtonText;
 	public TextMeshProUGUI scoreLabelText;
+	public TextMeshProUGUI labelPauseText;
+	public TextMeshProUGUI policyButtonText;
+	public TextMeshProUGUI resetScoreButtonText;
+	public TextMeshProUGUI creatorsButtonText;
+
 
 	public Image langButtonImage;
 
@@ -27,13 +32,21 @@ public class LanguageDirector : MonoBehaviour
 		engDict = new Dictionary<string, string>()
 		{
 			{"play", "PLAY"},
-			{"best score", "best\nSCORE"}
+			{"best score", "best\nSCORE"},
+			{"pause", "PAUSE"},
+			{"policyBtn", "PRIVACY\nPOLICY"},
+			{"resetBtn", "RESET\nSCORE"},
+			{"creatorsBtn", "CREATORS"}
 		};
 
 		ruDict = new Dictionary<string, string>()
 		{
 			{"play", "ИГРАТЬ"},
-			{"best score", "лучший\nСЧЕТ"}
+			{"best score", "лучший\nСЧЕТ"},
+			{"pause", "ПАУЗА"},
+			{"policyBtn", "ПОЛИТИКА\nПРИВАТНОСТИ"},
+			{"resetBtn", "СБРОСИТЬ\nСЧЕТ"},
+			{"creatorsBtn", "СОЗДАТЕЛИ"}
 		};
 
 		languageDict = new Dictionary<string, Dictionary<string, string>>()
@@ -66,6 +79,18 @@ public class LanguageDirector : MonoBehaviour
 
 		currentDict.TryGetValue("best score", out tempString);
 		scoreLabelText.text = tempString;
+
+		currentDict.TryGetValue("pause", out tempString);
+		labelPauseText.text = tempString;
+
+		currentDict.TryGetValue("policyBtn", out tempString);
+		policyButtonText.text = tempString;
+		
+		currentDict.TryGetValue("resetBtn", out tempString);
+		resetScoreButtonText.text = tempString;
+		
+		currentDict.TryGetValue("creatorsBtn", out tempString);
+		creatorsButtonText.text = tempString;
 	}
 
 	private void SetSpriteToLanguageButton()

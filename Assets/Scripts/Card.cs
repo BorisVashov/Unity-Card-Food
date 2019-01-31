@@ -8,8 +8,6 @@ public class Card : MonoBehaviour
 
 	public int CardId;
 
-	public GameObject foodSpriteGameObject;
-
 	public SpriteRenderer spriteRenderer;
 
 	public Sprite frontSide;
@@ -26,10 +24,8 @@ public class Card : MonoBehaviour
 		
 	}
 
-	public void InstalReferences(GameObject _foodImage, Sprite _frontSide, Sprite _backSide)
+	public void InstalReferences(Sprite _frontSide, Sprite _backSide)
 	{
-		foodSpriteGameObject = _foodImage;
-
 		frontSide = _frontSide;
 		backSide = _backSide;
 
@@ -61,15 +57,11 @@ public class Card : MonoBehaviour
 	public void ShowCard()
 	{
 		spriteRenderer.sprite = frontSide;
-
-		foodSpriteGameObject.SetActive(true);
 	}
 
 	public void HideCard()
 	{
 		spriteRenderer.sprite = backSide;
-
-		foodSpriteGameObject.SetActive(false);
 
 		isTouched = false;
 	}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour 
 {
@@ -14,12 +15,12 @@ public class GameDirector : MonoBehaviour
 
 	public GameObject mainMenuUI;
 	public GameObject gameUI;
-	public GameObject gamePauseUI;
+	public GameObject gamePauseMenu;
+	public GameObject gameAndPauseCanvas;
 	
 	public TouchController touchController;
 
-	private GameObject healthStars;
-	public SpriteRenderer[] starRenderers;
+	public Image[] starImages;
 
 	private Sprite starOnSprite;
 	private Sprite starOffSprite;
@@ -29,19 +30,9 @@ public class GameDirector : MonoBehaviour
 
 	void Start()
 	{
-		starRenderers = new SpriteRenderer[GameRules.MaxLivesForGame];
 
 		starOnSprite = Resources.Load<Sprite>("StarSprites/star_on");
 		starOffSprite = Resources.Load<Sprite>("StarSprites/star_off");
-
-		healthStars = GameObject.Find("HealthStars");
-
-		for (int i = 0; i < GameRules.MaxLivesForGame; i++)
-		{
-			starRenderers[i] = GameObject.Find("Star" + i).GetComponent<SpriteRenderer>();
-		}
-
-		healthStars.SetActive(false);
 
 		touchController = GameObject.Find("TouchController").GetComponent<TouchController>();
 
@@ -69,7 +60,7 @@ public class GameDirector : MonoBehaviour
 			if (cardDealer.cardFirst.CardId == cardDealer.cardSecond.CardId)
 			{
 				bonusAnswers++;
-				if (bonusAnswers == 2)
+				if (bonusAnswers == 1)
 				{
 					AddBonuseLive();
 				}
@@ -99,13 +90,14 @@ public class GameDirector : MonoBehaviour
 		mainMenuUI.SetActive(false);
 		gameUI.SetActive(true);
 
+		gameAndPauseCanvas.SetActive(true);
+
 		lives = GameRules.MaxLivesForGame;
 
 		Debug.Log("Lives = " + lives);
 
 		gameIsStarted = true;
 
-		healthStars.SetActive(true);
 	}
 	
 	public void RestartGame () 
@@ -120,7 +112,7 @@ public class GameDirector : MonoBehaviour
 
 		CountOfDealedCards = 0;
 
-		gamePauseUI.SetActive(false);
+		gamePauseMenu.SetActive(false);
 		gameUI.SetActive(true);
 
 		AddAllStars();
@@ -140,12 +132,12 @@ public class GameDirector : MonoBehaviour
 
 		mainMenuUI.SetActive(true);
 		gameUI.SetActive(false);
-		gamePauseUI.SetActive(false);
+		gamePauseMenu.SetActive(false);
+		gameAndPauseCanvas.SetActive(false);
 
 		CountOfDealedCards = 0;
 
 		AddAllStars();
-		healthStars.SetActive(false);
 	}
 
 	public void PauseGame()
@@ -154,7 +146,7 @@ public class GameDirector : MonoBehaviour
 
 		Time.timeScale = 0f;
 		
-		gamePauseUI.SetActive(true);
+		gamePauseMenu.SetActive(true);
 		gameUI.SetActive(false);
 	}
 
@@ -164,7 +156,7 @@ public class GameDirector : MonoBehaviour
 
 		Time.timeScale = 1f;
 
-		gamePauseUI.SetActive(false);
+		gamePauseMenu.SetActive(false);
 		gameUI.SetActive(true);
 	}
 
@@ -182,19 +174,19 @@ public class GameDirector : MonoBehaviour
 
 	private void AddStar()
 	{
-		starRenderers[lives].sprite = starOnSprite;
+		starImages[lives].sprite = starOnSprite;
 	}
 
 	private void DeleteStar()
 	{
-		starRenderers[lives].sprite = starOffSprite;
+		starImages[lives].sprite = starOffSprite;
 	}
 
 	private void AddAllStars()
 	{
-		for (int i = 0; i < starRenderers.Length; i++)
+		for (int i = 0; i < starImages.Length; i++)
 		{
-			starRenderers[i].sprite = starOnSprite;
+			starImages[i].sprite = starOnSprite;
 		}
 	}
 
