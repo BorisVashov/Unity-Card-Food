@@ -39,12 +39,20 @@ public class ScoreDirector : MonoBehaviour
 		UpdateCurrentGameScoreTMPro();
 	}
 
+	public void ResetBestScore()
+	{
+		PlayerPrefs.SetInt("score", 0);
+		PlayerPrefs.Save();
+
+		UpdateBestScore(0);
+	}
+
 	private void UpdateCurrentGameScoreTMPro()
 	{
 		currentGameTMPro.text = currentGameScore.ToString();
 	}
 	
-	private void UpdatePlayerPrefsScore()
+	public void UpdatePlayerPrefsScore()
 	{
 		// bestScore = PlayerPrefs.GetInt("score", 0);
 
@@ -67,4 +75,6 @@ public class ScoreDirector : MonoBehaviour
 		bestScore = _currentGameScore;
 		bestScoreTMPro.text = bestScore.ToString();
 	}
+
+	
 }

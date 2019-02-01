@@ -5,10 +5,6 @@ using UnityEngine;
 public class RateDirector : MonoBehaviour 
 {
 	public GameObject ratingPage;
-	void Start () 
-	{
-		
-	}
 
 	private void RateAppShow()
 	{

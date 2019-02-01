@@ -18,6 +18,10 @@ public class LanguageDirector : MonoBehaviour
 	public TextMeshProUGUI resetScoreButtonText;
 	public TextMeshProUGUI creatorsButtonText;
 
+	public TextMeshProUGUI resetScoreText;
+	public TextMeshProUGUI yesLabel;
+	public TextMeshProUGUI noLabel;
+
 
 	public Image langButtonImage;
 
@@ -36,7 +40,10 @@ public class LanguageDirector : MonoBehaviour
 			{"pause", "PAUSE"},
 			{"policyBtn", "PRIVACY\nPOLICY"},
 			{"resetBtn", "RESET\nSCORE"},
-			{"creatorsBtn", "CREATORS"}
+			{"creatorsBtn", "CREATORS"},
+			{"resetScoreText", "Do you want to reset score?"},
+			{"yes", "YES"},
+			{"no", "NO"}
 		};
 
 		ruDict = new Dictionary<string, string>()
@@ -46,7 +53,10 @@ public class LanguageDirector : MonoBehaviour
 			{"pause", "ПАУЗА"},
 			{"policyBtn", "ПОЛИТИКА\nПРИВАТНОСТИ"},
 			{"resetBtn", "СБРОСИТЬ\nСЧЕТ"},
-			{"creatorsBtn", "СОЗДАТЕЛИ"}
+			{"creatorsBtn", "СОЗДАТЕЛИ"},
+			{"resetScoreText", "Вы хотите сбросить счет?"},
+			{"yes", "ДА"},
+			{"no", "НЕТ"}
 		};
 
 		languageDict = new Dictionary<string, Dictionary<string, string>>()
@@ -91,6 +101,15 @@ public class LanguageDirector : MonoBehaviour
 		
 		currentDict.TryGetValue("creatorsBtn", out tempString);
 		creatorsButtonText.text = tempString;
+
+		currentDict.TryGetValue("resetScoreText", out tempString);
+		resetScoreText.text = tempString;
+
+		currentDict.TryGetValue("yes", out tempString);
+		yesLabel.text = tempString;
+
+		currentDict.TryGetValue("no", out tempString);
+		noLabel.text = tempString;
 	}
 
 	private void SetSpriteToLanguageButton()

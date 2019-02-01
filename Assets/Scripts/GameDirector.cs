@@ -17,8 +17,10 @@ public class GameDirector : MonoBehaviour
 	public GameObject gameUI;
 	public GameObject gamePauseMenu;
 	public GameObject gameAndPauseCanvas;
+	public GameObject gameLoseMenu;
 	
 	public TouchController touchController;
+	private bool lastTouchControllerState = false;
 
 	public Image[] starImages;
 
@@ -45,7 +47,7 @@ public class GameDirector : MonoBehaviour
 	{
 		if (lives == 0 && gameIsStarted)
 		{
-			StopGame();
+			LoseGame();
 		}
 
 		if (CountOfDealedCards == 0 && gameIsStarted)
@@ -114,8 +116,25 @@ public class GameDirector : MonoBehaviour
 
 		gamePauseMenu.SetActive(false);
 		gameUI.SetActive(true);
+		gameLoseMenu.SetActive(false);
 
 		AddAllStars();
+
+		gameIsStarted = true;
+		lives = GameRules.MaxLivesForGame;
+	}
+
+	private void LoseGame()
+	{
+		gameIsStarted = false;
+
+		scoreDirector.UpdatePlayerPrefsScore();
+
+		touchController.enabled = false;
+
+		Time.timeScale = 0f;
+		
+		gameLoseMenu.SetActive(true);
 	}
 
 	public void StopGame()
@@ -134,6 +153,8 @@ public class GameDirector : MonoBehaviour
 		gameUI.SetActive(false);
 		gamePauseMenu.SetActive(false);
 		gameAndPauseCanvas.SetActive(false);
+		gameLoseMenu.SetActive(false);
+
 
 		CountOfDealedCards = 0;
 
@@ -142,6 +163,8 @@ public class GameDirector : MonoBehaviour
 
 	public void PauseGame()
 	{
+		lastTouchControllerState = touchController.enabled;
+
 		touchController.enabled = false;
 
 		Time.timeScale = 0f;
@@ -152,7 +175,7 @@ public class GameDirector : MonoBehaviour
 
 	public void ContinueGame()
 	{
-		touchController.enabled = true;
+		touchController.enabled = lastTouchControllerState;
 
 		Time.timeScale = 1f;
 

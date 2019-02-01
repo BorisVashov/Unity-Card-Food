@@ -111,7 +111,6 @@ public class Card : MonoBehaviour
 
 			if (Vector2.Distance(this.transform.position, targetPosition) < 0.0001)
 			{
-				// Debug.Log("End of coroutine");
 				if (isDealing)
 				{
 					cardCollider.enabled = true;

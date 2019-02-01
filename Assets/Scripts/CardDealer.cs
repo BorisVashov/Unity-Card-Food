@@ -19,8 +19,6 @@ public class CardDealer : MonoBehaviour
 
 	private TouchController touchController;
 
-	// private AudioDirector audioDirector;
-
 	void Awake()
 	{
 		cardPrefab = Resources.Load<GameObject>("CardPrefab4");
@@ -35,8 +33,6 @@ public class CardDealer : MonoBehaviour
 	void Start () 
 	{
 		StartDealPos = this.transform.Find("StartDealPos").transform.position;
-
-		// audioDirector = GameObject.Find("AudioDirector").GetComponent<AudioDirector>();
 	}
 
 	private void ShuffleCards()
@@ -50,8 +46,6 @@ public class CardDealer : MonoBehaviour
 
 			FoodCards[randIndex] = FoodCards[roundOfDealing * GameRules.CardForDealing + id];
 			FoodCards[roundOfDealing * GameRules.CardForDealing + id] = tempCard;
-
-			
 		}
 	}
 

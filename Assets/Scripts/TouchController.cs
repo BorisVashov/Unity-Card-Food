@@ -30,7 +30,7 @@ public class TouchController : MonoBehaviour
 			Vector3 endVector = new Vector3(startVector.x, startVector.y, 20);
 			Debug.DrawLine(startVector, endVector, Color.red, 5f);
 
-			int countHits = Physics2D.RaycastNonAlloc(startVector, Vector2.zero, hits);//  (ray, hits, 20);
+			int countHits = Physics2D.RaycastNonAlloc(startVector, Vector2.zero, hits);
 
 			for(int index = 0; index < countHits; index++)
 			{
@@ -49,9 +49,6 @@ public class TouchController : MonoBehaviour
 
 					break;
 				}
-				// {
-				// 	Debug.Log("NO");
-				// }
 			}
 		}
 		#endif
@@ -65,7 +62,7 @@ public class TouchController : MonoBehaviour
 			Vector3 endVector = new Vector3(startVector.x, startVector.y, 20);
 			Debug.DrawLine(startVector, endVector, Color.red, 5f);
 
-			int countHits = Physics2D.RaycastNonAlloc(startVector, Vector2.zero, hits);//  (ray, hits, 20);
+			int countHits = Physics2D.RaycastNonAlloc(startVector, Vector2.zero, hits);
 
 			for(int index = 0; index < countHits; index++)
 			{
