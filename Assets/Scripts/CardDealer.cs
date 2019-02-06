@@ -69,8 +69,6 @@ public class CardDealer : MonoBehaviour
 	{
 		touchController.enabled = false;
 
-		Debug.Log("Deal length: " + FoodCards.Length);
-
 		if (roundOfDealing == 3)
 		{
 			roundOfDealing = 0;
@@ -93,8 +91,6 @@ public class CardDealer : MonoBehaviour
 
 		for(int id = 0; id < GameRules.CardForDealing; id++)
 		{
-			Debug.Log("Deal id: " + (id + roundOfDealing * GameRules.CardForDealing));
-
 			Vector2 targetPosition = GetTargetPosition(id);
 
 			FoodCards[roundOfDealing * GameRules.CardForDealing + id].MoveCardToPosition(targetPosition, isDealing);
@@ -163,8 +159,6 @@ public class CardDealer : MonoBehaviour
 
 		for(int id = 0; id < GameRules.CardForDealing; id++)
 		{
-			Debug.Log("Reset id: " + id);
-
 			FoodCards[id + GameRules.CardForDealing * roundOfDealing].ResetCard();
 			
 			FoodCards[id + GameRules.CardForDealing * roundOfDealing].MoveCardToPosition(this.transform.position, isDealing);

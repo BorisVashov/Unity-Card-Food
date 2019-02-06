@@ -21,7 +21,7 @@ public class RateDirector : MonoBehaviour
 
 	private string GetRateURL()
 	{
-		string appID = "com.miniclip.plagueinc"; // GooglePlay, Amazon, Samsung
+		string appID = "com.fraternalcastle.cardfood"; // GooglePlay, Amazon, Samsung
 
 		string rateURL = "https://play.google.com/store/apps/details?id=" + appID; // GooglePlay
 

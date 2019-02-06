@@ -30,6 +30,8 @@ public class GameDirector : MonoBehaviour
 
 	private int bonusAnswers = 0;
 
+	private AdDirector adDirector;
+
 	void Start()
 	{
 
@@ -41,6 +43,8 @@ public class GameDirector : MonoBehaviour
 		cardDealer = GameObject.Find("CardDealer").GetComponent<CardDealer>();
 
 		scoreDirector = GameObject.Find("ScoreDirector").GetComponent<ScoreDirector>();
+
+		adDirector = GameObject.Find("AdDirector").GetComponent<AdDirector>();
 	}
 
 	void Update()
@@ -80,8 +84,6 @@ public class GameDirector : MonoBehaviour
 				lives--;
 				DeleteStar();
 
-				Debug.Log("Oops! Lives = " + lives);
-
 				cardDealer.HideChoosenCards();
 			}
 		}
@@ -96,14 +98,13 @@ public class GameDirector : MonoBehaviour
 
 		lives = GameRules.MaxLivesForGame;
 
-		Debug.Log("Lives = " + lives);
-
 		gameIsStarted = true;
-
 	}
 	
 	public void RestartGame () 
 	{
+		adDirector.MaybeTryShowAd();
+
 		cardDealer.StopAllCoroutines();
 
 		scoreDirector.ResetCurrentGameScore();
@@ -139,6 +140,8 @@ public class GameDirector : MonoBehaviour
 
 	public void StopGame()
 	{
+		adDirector.MaybeTryShowAd();
+
 		cardDealer.StopAllCoroutines();
 
 		scoreDirector.ResetCurrentGameScore();

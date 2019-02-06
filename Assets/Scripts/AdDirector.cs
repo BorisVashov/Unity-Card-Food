@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AppodealAds.Unity.Api;
+using AppodealAds.Unity.Common;
 
 public class AdDirector : MonoBehaviour 
 {	
@@ -9,10 +11,17 @@ public class AdDirector : MonoBehaviour
 
 	[SerializeField] private bool isPolicyAccept;
 
+	string appKey = "7661d9f139d4747ab483bba4d85acfe65db4adc22f13ef2e";
+
 	private bool isFirstAppRun = true;
+
+	private float timeBetweenAds = 60f * 3f;
+	private float timeLastShowAds;
 
 	void Start () 
 	{
+		timeLastShowAds = Time.time;
+
 		isFirstAppRun = bool.Parse(PlayerPrefs.GetString("isFirstAppRun", "true"));
 
 		if (isFirstAppRun)
@@ -21,8 +30,30 @@ public class AdDirector : MonoBehaviour
 		}
 		else
 		{
+			isPolicyAccept = bool.Parse(PlayerPrefs.GetString("policy", "false"));
+			
+			InitializeAds();
 			mainMenu.SetActive(true);
 		}
+	}
+
+	private void InitializeAds()
+	{
+		Appodeal.initialize(appKey, Appodeal.INTERSTITIAL, isPolicyAccept);
+	}
+
+	public void MaybeTryShowAd()
+	{
+		if (Time.time - timeLastShowAds > timeBetweenAds)
+		{
+			if (Appodeal.isLoaded(Appodeal.INTERSTITIAL))
+			{
+				Appodeal.show(Appodeal.INTERSTITIAL);
+
+				timeLastShowAds = Time.time;
+			}
+		}
+		
 	}
 	
 	public void AcceptPolicyPressed()
@@ -59,6 +90,8 @@ public class AdDirector : MonoBehaviour
 	{
 		mainMenu.SetActive(true);
 		privacyPolicyMenu.SetActive(false);
+
+		InitializeAds();
 	}
 
 	private string GetPrivacyPolicyURL()

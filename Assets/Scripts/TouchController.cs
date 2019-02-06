@@ -27,8 +27,8 @@ public class TouchController : MonoBehaviour
 		{
 			startVector = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-			Vector3 endVector = new Vector3(startVector.x, startVector.y, 20);
-			Debug.DrawLine(startVector, endVector, Color.red, 5f);
+			// Vector3 endVector = new Vector3(startVector.x, startVector.y, 20);
+			// Debug.DrawLine(startVector, endVector, Color.red, 5f);
 
 			int countHits = Physics2D.RaycastNonAlloc(startVector, Vector2.zero, hits);
 
@@ -59,8 +59,8 @@ public class TouchController : MonoBehaviour
 		{
 			startVector = mainCamera.ScreenToWorldPoint(Input.GetTouch(0).position);
 
-			Vector3 endVector = new Vector3(startVector.x, startVector.y, 20);
-			Debug.DrawLine(startVector, endVector, Color.red, 5f);
+			// Vector3 endVector = new Vector3(startVector.x, startVector.y, 20);
+			// Debug.DrawLine(startVector, endVector, Color.red, 5f);
 
 			int countHits = Physics2D.RaycastNonAlloc(startVector, Vector2.zero, hits);
 
