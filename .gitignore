@@ -17,6 +17,7 @@ Assets/Output/
 *.svg
 *.asset
 *.prefab
+*.png
 
 Assets/AssetStoreTools*
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour 
 {
@@ -13,19 +14,44 @@ public class GameDirector : MonoBehaviour
 	private int lives;
 
 	public GameObject mainMenuUI;
+	public GameObject gameUI;
+	public GameObject gamePauseMenu;
+	public GameObject gameAndPauseCanvas;
+	public GameObject gameLoseMenu;
+	
+	public TouchController touchController;
+	private bool lastTouchControllerState = false;
+
+	public Image[] starImages;
+
+	private Sprite starOnSprite;
+	private Sprite starOffSprite;
+
+
+	private int bonusAnswers = 0;
+
+	private AdDirector adDirector;
 
 	void Start()
 	{
+
+		starOnSprite = Resources.Load<Sprite>("StarSprites/star_on");
+		starOffSprite = Resources.Load<Sprite>("StarSprites/star_off");
+
+		touchController = GameObject.Find("TouchController").GetComponent<TouchController>();
+
 		cardDealer = GameObject.Find("CardDealer").GetComponent<CardDealer>();
 
-		scoreDirector = new ScoreDirector();
+		scoreDirector = GameObject.Find("ScoreDirector").GetComponent<ScoreDirector>();
+
+		adDirector = GameObject.Find("AdDirector").GetComponent<AdDirector>();
 	}
 
 	void Update()
 	{
 		if (lives == 0 && gameIsStarted)
 		{
-			StopGame();
+			LoseGame();
 		}
 
 		if (CountOfDealedCards == 0 && gameIsStarted)
@@ -39,6 +65,12 @@ public class GameDirector : MonoBehaviour
 		{
 			if (cardDealer.cardFirst.CardId == cardDealer.cardSecond.CardId)
 			{
+				bonusAnswers++;
+				if (bonusAnswers == 1)
+				{
+					AddBonuseLive();
+				}
+
 				scoreDirector.AddScore(1);
 
 				cardDealer.PutChoosenCardsBackToDeck();
@@ -47,8 +79,10 @@ public class GameDirector : MonoBehaviour
 			}
 			else
 			{
+				bonusAnswers = 0; // сброс бонусной серии
+
 				lives--;
-				Debug.Log("Oops! Lives = " + lives);
+				DeleteStar();
 
 				cardDealer.HideChoosenCards();
 			}
@@ -58,34 +92,128 @@ public class GameDirector : MonoBehaviour
 	public void StartGame () 
 	{
 		mainMenuUI.SetActive(false);
+		gameUI.SetActive(true);
 
-		lives = GameRules.LivesForGame;
+		gameAndPauseCanvas.SetActive(true);
 
-		Debug.Log("Lives = " + lives);
+		lives = GameRules.MaxLivesForGame;
 
 		gameIsStarted = true;
 	}
 	
 	public void RestartGame () 
 	{
-		cardDealer.ResetCards();
+		adDirector.MaybeTryShowAd();
+
+		cardDealer.StopAllCoroutines();
+
+		scoreDirector.ResetCurrentGameScore();
+
+		Time.timeScale = 1f;
+
+		cardDealer.GetBackAllCardsToDeck();
+
+		CountOfDealedCards = 0;
+
+		gamePauseMenu.SetActive(false);
+		gameUI.SetActive(true);
+		gameLoseMenu.SetActive(false);
+
+		AddAllStars();
+
+		gameIsStarted = true;
+		lives = GameRules.MaxLivesForGame;
+	}
+
+	private void LoseGame()
+	{
+		gameIsStarted = false;
+
+		scoreDirector.UpdatePlayerPrefsScore();
+
+		touchController.enabled = false;
+
+		Time.timeScale = 0f;
+		
+		gameLoseMenu.SetActive(true);
 	}
 
 	public void StopGame()
 	{
+		adDirector.MaybeTryShowAd();
+
+		cardDealer.StopAllCoroutines();
+
+		scoreDirector.ResetCurrentGameScore();
+
+		Time.timeScale = 1f;
 
 		gameIsStarted = false;
-
-		// cardDealer.cardFirst = null;
-		// cardDealer.cardSecond = null;
 
 		cardDealer.GetBackAllCardsToDeck();
 
 		mainMenuUI.SetActive(true);
+		gameUI.SetActive(false);
+		gamePauseMenu.SetActive(false);
+		gameAndPauseCanvas.SetActive(false);
+		gameLoseMenu.SetActive(false);
+
 
 		CountOfDealedCards = 0;
 
+		AddAllStars();
+	}
 
+	public void PauseGame()
+	{
+		lastTouchControllerState = touchController.enabled;
+
+		touchController.enabled = false;
+
+		Time.timeScale = 0f;
+		
+		gamePauseMenu.SetActive(true);
+		gameUI.SetActive(false);
+	}
+
+	public void ContinueGame()
+	{
+		touchController.enabled = lastTouchControllerState;
+
+		Time.timeScale = 1f;
+
+		gamePauseMenu.SetActive(false);
+		gameUI.SetActive(true);
+	}
+
+	private void AddBonuseLive()
+	{
+		if (lives < GameRules.MaxLivesForGame)
+		{
+			AddStar();
+			lives++;
+		}
+
+
+		bonusAnswers = 0;
+	}
+
+	private void AddStar()
+	{
+		starImages[lives].sprite = starOnSprite;
+	}
+
+	private void DeleteStar()
+	{
+		starImages[lives].sprite = starOffSprite;
+	}
+
+	private void AddAllStars()
+	{
+		for (int i = 0; i < starImages.Length; i++)
+		{
+			starImages[i].sprite = starOnSprite;
+		}
 	}
 
 

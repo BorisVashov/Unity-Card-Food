@@ -21,7 +21,7 @@ public class CardDealer : MonoBehaviour
 
 	void Awake()
 	{
-		cardPrefab = Resources.Load<GameObject>("CardPrefab2");
+		cardPrefab = Resources.Load<GameObject>("CardPrefab4");
 
 		cardGenerator = gameObject.GetComponent<CardGenerator>();
 
@@ -49,6 +49,14 @@ public class CardDealer : MonoBehaviour
 		}
 	}
 
+	private void SetOrderInLayerForCards()
+	{
+		for (int id = 0; id < GameRules.CardForDealing; id++)
+		{
+			FoodCards[roundOfDealing * GameRules.CardForDealing + id].spriteRenderer.sortingOrder = id;
+		}
+	}
+
 	public void ActivateAllCardsObjects()
 	{
 		for (int id = 0; id < FoodCards.Length; id++)
@@ -59,11 +67,18 @@ public class CardDealer : MonoBehaviour
 	
 	public void DealCards()
 	{
-		touchController.gameObject.SetActive(false);
+		touchController.enabled = false;
 
-		Debug.Log("Deal length: " + FoodCards.Length);
+		if (roundOfDealing == 3)
+		{
+			roundOfDealing = 0;
+		}
 
 		ShuffleCards();
+		ShuffleCards();
+
+
+		SetOrderInLayerForCards();
 
 		ActivateAllCardsObjects();
 
@@ -76,8 +91,6 @@ public class CardDealer : MonoBehaviour
 
 		for(int id = 0; id < GameRules.CardForDealing; id++)
 		{
-			Debug.Log("Deal id: " + (id + roundOfDealing * GameRules.CardForDealing));
-
 			Vector2 targetPosition = GetTargetPosition(id);
 
 			FoodCards[roundOfDealing * GameRules.CardForDealing + id].MoveCardToPosition(targetPosition, isDealing);
@@ -106,7 +119,7 @@ public class CardDealer : MonoBehaviour
 			FoodCards[roundOfDealing * 20 + id].HideCard();
 		}
 
-		touchController.gameObject.SetActive(true);
+		touchController.enabled = true;
 
 		roundOfDealing++;
 	}
@@ -132,7 +145,7 @@ public class CardDealer : MonoBehaviour
 
 	private Vector2 GetTargetPosition(int id)
 	{
-		float x = StartDealPos.x + id % 4 + id % 4 * 0.5f;
+		float x = StartDealPos.x + id % 4 + id % 4 * 0.4f;
 		float y = StartDealPos.y - id / 4 - id / 4 * 0.6f;
 
 		Vector2	targetPos = new Vector2(x, y);
@@ -146,8 +159,6 @@ public class CardDealer : MonoBehaviour
 
 		for(int id = 0; id < GameRules.CardForDealing; id++)
 		{
-			Debug.Log("Reset id: " + id);
-
 			FoodCards[id + GameRules.CardForDealing * roundOfDealing].ResetCard();
 			
 			FoodCards[id + GameRules.CardForDealing * roundOfDealing].MoveCardToPosition(this.transform.position, isDealing);
@@ -175,7 +186,18 @@ public class CardDealer : MonoBehaviour
 			FoodCards[id].GetBackCardToDeck();
 		}
 
+		cardFirst = null;
+		cardSecond = null;
+
 		roundOfDealing = 0;
+	}
+
+	public void StopAllCoroutinesInCards()
+	{
+		for(int i = 0; i < FoodCards.Length; i++)
+		{
+			FoodCards[i].StopAllCoroutines();
+		}
 	}
 
 }

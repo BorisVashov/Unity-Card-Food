@@ -9,20 +9,24 @@ public class CardGenerator : MonoBehaviour
 	{
 		Card[] cardArray = new Card[foodCount * 2];
 
-		GameObject imageFood;
+		Sprite imageFood;
+
+		Sprite backSide = Resources.Load<Sprite>("BackSide");
+
+		Sprite[] frontSides = Resources.LoadAll<Sprite>("FoodSprites/food");
 
 		for (int id = 0, index = 0; index < cardArray.Length; id++, index += 2)
 		{
 			cardArray[index] = Instantiate(cardPrefab, this.transform).GetComponent<Card>();
 
-			imageFood = Resources.Load<GameObject>("Food/food_" + id);
+			imageFood = frontSides[id];
 
-			SetupCard(cardArray[index], id, imageFood);
+			SetupCard(cardArray[index], id, imageFood, backSide);
 
 			// ------> вторую такую же карту ложим в колоду
 			cardArray[index + 1] = Instantiate(cardPrefab, this.transform).GetComponent<Card>();
 			
-			SetupCard(cardArray[index + 1], id, imageFood);
+			SetupCard(cardArray[index + 1], id, imageFood, backSide);
 
 			cardArray[index].gameObject.SetActive(false);
 			cardArray[index + 1].gameObject.SetActive(false);
@@ -31,20 +35,11 @@ public class CardGenerator : MonoBehaviour
 		return cardArray;
 	}
 
-	private void SetupCard(Card card, int id, GameObject imageFood)
+	private void SetupCard(Card card, int id, Sprite imageFood, Sprite _backSide)
 	{
-
-		Instantiate(imageFood, card.transform.position, card.transform.rotation, card.transform);
-		// GameObject foodImageGO = cardArray[id].transform.Find("food_" + id + "(Clone)").gameObject;
-		GameObject foodImageGO = card.transform.Find("food_" + id + "(Clone)").gameObject;
-		GameObject backSideGO = card.transform.Find("BackSide").gameObject;
-		GameObject frontSideGO = card.transform.Find("FrontSide").gameObject;
-
-		foodImageGO.name = "FoodImage";
-
 		card.CardId = id;
 
-		card.InstalReferences(foodImageGO, frontSideGO, backSideGO);
+		card.InstalReferences(imageFood, _backSide);
 
 		card.ResetCard();	
 	}

@@ -8,28 +8,35 @@ public class Card : MonoBehaviour
 
 	public int CardId;
 
-	public GameObject backSide;
-	public GameObject fronSide;
-	public GameObject foodImageGameObject;
+	public SpriteRenderer spriteRenderer;
+
+	public Sprite frontSide;
+	public Sprite backSide;
 
 	Vector2 startPosition;
 
 	Collider2D cardCollider;
+
+	public AudioSource source;
 
 	void Start() 
 	{
 		
 	}
 
-	public void InstalReferences(GameObject _foodImage, GameObject _frontSide, GameObject _backSide)
+	public void InstalReferences(Sprite _frontSide, Sprite _backSide)
 	{
-		foodImageGameObject = _foodImage;
-		fronSide = _frontSide;
+		frontSide = _frontSide;
 		backSide = _backSide;
 
 		startPosition = this.gameObject.transform.position;
 
 		cardCollider = GetComponent<Collider2D>();
+
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		spriteRenderer.sprite = backSide;
+
+		source = gameObject.GetComponent<AudioSource>();
 	}
 
 	public Card DidTouch()
@@ -49,16 +56,12 @@ public class Card : MonoBehaviour
 
 	public void ShowCard()
 	{
-		backSide.SetActive(false);
-		fronSide.SetActive(true);
-		foodImageGameObject.SetActive(true);
+		spriteRenderer.sprite = frontSide;
 	}
 
 	public void HideCard()
 	{
-		backSide.SetActive(true);
-		fronSide.SetActive(false);
-		foodImageGameObject.SetActive(false);
+		spriteRenderer.sprite = backSide;
 
 		isTouched = false;
 	}
@@ -81,6 +84,8 @@ public class Card : MonoBehaviour
 
 	public void MoveCardToPosition(Vector2 targetPosition, bool isDealing)
 	{	
+		source.Play(); // play audio clip
+
 		Vector2 direction = targetPosition - (Vector2)this.transform.position;
 		direction.Normalize();
 
@@ -106,7 +111,6 @@ public class Card : MonoBehaviour
 
 			if (Vector2.Distance(this.transform.position, targetPosition) < 0.0001)
 			{
-				// Debug.Log("End of coroutine");
 				if (isDealing)
 				{
 					cardCollider.enabled = true;
